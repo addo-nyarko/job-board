@@ -1,7 +1,7 @@
 from app.services.scoring import (
-    score_single_choice,
-    score_number,
     score_multi_choice,
+    score_number,
+    score_single_choice,
     score_text,
 )
 
@@ -34,11 +34,14 @@ def create_test_job(client):
 
 
 def test_apply_to_nonexistent_job(client):
-    response = client.post("/jobs/9999/apply", json={
-        "candidate_name": "John Doe",
-        "candidate_email": "john@test.com",
-        "answers": [{"question_id": 1, "response": "Python"}],
-    })
+    response = client.post(
+        "/jobs/9999/apply",
+        json={
+            "candidate_name": "John Doe",
+            "candidate_email": "john@test.com",
+            "answers": [{"question_id": 1, "response": "Python"}],
+        },
+    )
     assert response.status_code == 404
 
 
@@ -53,11 +56,14 @@ def test_correct_answer_scores_full(client):
     job_id = job.json()["id"]
     question_id = job.json()["questions"][0]["id"]
 
-    response = client.post(f"/jobs/{job_id}/apply", json={
-        "candidate_name": "John Doe",
-        "candidate_email": "john@test.com",
-        "answers": [{"question_id": question_id, "response": "Python"}],
-    })
+    response = client.post(
+        f"/jobs/{job_id}/apply",
+        json={
+            "candidate_name": "John Doe",
+            "candidate_email": "john@test.com",
+            "answers": [{"question_id": question_id, "response": "Python"}],
+        },
+    )
     assert response.status_code == 201
     assert response.json()["score"] == 100.0
 
@@ -67,11 +73,14 @@ def test_wrong_answer_scores_zero(client):
     job_id = job.json()["id"]
     question_id = job.json()["questions"][0]["id"]
 
-    response = client.post(f"/jobs/{job_id}/apply", json={
-        "candidate_name": "John Doe",
-        "candidate_email": "john@test.com",
-        "answers": [{"question_id": question_id, "response": "Java"}],
-    })
+    response = client.post(
+        f"/jobs/{job_id}/apply",
+        json={
+            "candidate_name": "John Doe",
+            "candidate_email": "john@test.com",
+            "answers": [{"question_id": question_id, "response": "Java"}],
+        },
+    )
     assert response.status_code == 201
     assert response.json()["score"] == 0.0
 

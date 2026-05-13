@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.dependencies import get_db, get_or_404
-from app.models import Job, Application, Answer
+from app.models import Answer, Application, Job
 from app.schemas import ApplicationCreate, ApplicationOut
 from app.services.scoring import calculate_score
 
@@ -46,14 +46,18 @@ def apply_to_job(job_id: int, app_data: ApplicationCreate, db: Session = Depends
     db.refresh(application)
 
     answers_as_dicts = [
-        {"question_id": a.question_id, "response": a.response}
-        for a in application.answers
+        {"question_id": a.question_id, "response": a.response} for a in application.answers
     ]
-    application.score = calculate_score(answers_as_dicts, job.questions)
+    application.score = calculate_score(answers_as_dicts, job.questions)  # type: ignore[assignment]
 
     db.commit()
     db.refresh(application)
-    logger.info("Application %d submitted for job %d (score: %.1f)", application.id, job_id, application.score)
+    logger.info(
+        "Application %d submitted for job %d (score: %.1f)",
+        application.id,
+        job_id,
+        application.score,
+    )
     return application
 
 

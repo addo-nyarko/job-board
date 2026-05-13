@@ -8,6 +8,7 @@ A RESTful backend API that allows employers to create job postings with custom s
 - **Database:** SQLAlchemy ORM with SQLite (swappable to PostgreSQL)
 - **Validation:** Pydantic v2 with email validation and field constraints
 - **Testing:** pytest with isolated test database
+- **Linting:** Ruff (lint + format), mypy (type checking), pre-commit hooks
 
 ## Project Structure
 
@@ -59,10 +60,15 @@ pytest tests/ -v
 ## Makefile
 
 ```bash
-make setup    # Create venv and install deps
-make run      # Start the dev server
-make test     # Run all tests
-make clean    # Remove venv, caches, databases
+make setup        # Create venv and install deps
+make setup-dev    # Install with dev tools (ruff, mypy, pre-commit)
+make run          # Start the dev server
+make test         # Run all tests
+make lint         # Run linter (ruff)
+make format       # Auto-format code (ruff)
+make typecheck    # Run type checker (mypy)
+make check        # Run lint + typecheck + tests
+make clean        # Remove venv, caches, databases
 ```
 
 ## API Endpoints

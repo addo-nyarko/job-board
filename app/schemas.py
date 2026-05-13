@@ -1,5 +1,4 @@
 from pydantic import BaseModel, EmailStr, Field
-from typing import Union
 
 from app.enums import QuestionType
 
@@ -41,7 +40,7 @@ class JobOut(BaseModel):
 
 class AnswerCreate(BaseModel):
     question_id: int
-    response: Union[str, list[str]]
+    response: str | list[str]
 
 
 class ApplicationCreate(BaseModel):
@@ -52,7 +51,7 @@ class ApplicationCreate(BaseModel):
 
 class AnswerOut(BaseModel):
     question_id: int
-    response: Union[str, list[str]]
+    response: str | list[str]
 
     model_config = {"from_attributes": True}
 
